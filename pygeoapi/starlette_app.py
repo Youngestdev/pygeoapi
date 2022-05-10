@@ -155,34 +155,34 @@ async def collection_queryables(request: Request, collection_id=None):
     return get_response(api_.get_collection_queryables(request, collection_id))
 
 
-@app.route('/collections/{name}/tiles')
-@app.route('/collections/{name}/tiles/')
-async def get_collection_tiles(request: Request, name=None):
+@app.route('/collections/{collection_id:path}/tiles')
+@app.route('/collections/{collection_id:path}/tiles/')
+async def get_collection_tiles(request: Request, collection_id=None):
     """
     OGC open api collections tiles access point
 
     :param request: Starlette Request instance
-    :param name: identifier of collection name
+    :param collection_id: collection identifier
 
     :returns: Starlette HTTP Response
     """
-    if 'name' in request.path_params:
-        name = request.path_params['name']
-    return get_response(api_.get_collection_tiles(request, name))
+    if 'collection_id' in request.path_params:
+        collection_id = request.path_params['collection_id']
+    return get_response(api_.get_collection_tiles(request, collection_id))
 
 
-@app.route('/collections/{name}/tiles/\
+@app.route('/collections/{collection_id:path}/tiles/\
     {tileMatrixSetId}/{tile_matrix}/{tileRow}/{tileCol}')
-@app.route('/collections/{name}/tiles/\
+@app.route('/collections/{collection_id:path}/tiles/\
     {tileMatrixSetId}/{tile_matrix}/{tileRow}/{tileCol}/')
-async def get_collection_items_tiles(request: Request, name=None,
+async def get_collection_items_tiles(request: Request, collection_id=None,
                                      tileMatrixSetId=None, tile_matrix=None,
                                      tileRow=None, tileCol=None):
     """
     OGC open api collection tiles service
 
     :param request: Starlette Request instance
-    :param name: identifier of collection name
+    :param collection_id: collection identifier
     :param tileMatrixSetId: identifier of tile matrix set
     :param tile_matrix: identifier of {z} matrix index
     :param tileRow: identifier of {y} matrix index
@@ -190,8 +190,9 @@ async def get_collection_items_tiles(request: Request, name=None,
 
     :returns: HTTP response
     """
-    if 'name' in request.path_params:
-        name = request.path_params['name']
+
+    if 'collection_id' in request.path_params:
+        collection_id = request.path_params['collection_id']
     if 'tileMatrixSetId' in request.path_params:
         tileMatrixSetId = request.path_params['tileMatrixSetId']
     if 'tile_matrix' in request.path_params:
@@ -201,7 +202,8 @@ async def get_collection_items_tiles(request: Request, name=None,
     if 'tileCol' in request.path_params:
         tileCol = request.path_params['tileCol']
     return get_response(api_.get_collection_tiles_data(
-        request, name, tileMatrixSetId, tile_matrix, tileRow, tileCol))
+        request, collection_id, tileMatrixSetId, tile_matrix,
+        tileRow, tileCol))
 
 
 @app.route('/collections/{collection_id:path}/items', methods=['GET', 'POST'])
